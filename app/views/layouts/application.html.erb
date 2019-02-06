@@ -4,12 +4,39 @@
     <title>Launch</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+    <%= stylesheet_link_tag    'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', media: 'all' %>
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="nav">
+      <div class="container is-fluid">
+        <ul>
+          <li>
+            <%= link_to root_path, class: "navbar-item" do %>
+              <i class="fa fa-tachometer"></i>
+              <span>Home</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to teams_path, class: "navbar-item" do %>
+              <i class="fa fa-users"></i>
+              <span>Teams</span>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="app" class="container is-fluid">
+      <% flash.each do |key, value| %>
+        <section class="section">
+          <div class="<%= flash_class(key) %>">
+            <%= value %>
+          </div>
+        </section>
+      <% end %>
+      <%= yield %>
+    </div>
   </body>
 </html>

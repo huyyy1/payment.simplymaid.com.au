@@ -19,6 +19,7 @@ CSV.foreach(Rails.root.join('data', 'export.csv'), encoding: "utf-8", headers: :
     name: row[0],
     email: row[1],
     is_gst: row[2].downcase == "yes" ? true : false,
+    is_confirmed: true,
     abn: row[3].gsub(" ",""),
     billing_name: row[4],
     address: row[5],
@@ -26,4 +27,15 @@ CSV.foreach(Rails.root.join('data', 'export.csv'), encoding: "utf-8", headers: :
     account_number: row[7].gsub(" ",""),
     notes: row[8]
   )
+end
+
+p "Create weeks"
+start_date = Date.new(2018,10,7)
+while start_date < Date.new(2021,10,7) do
+  Week.create(
+    start_date: start_date,
+    end_date: start_date + 6.days,
+    payment_date: start_date + 10.days
+  )
+  start_date = start_date + 7.days
 end

@@ -10,12 +10,54 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_03_050050) do
+ActiveRecord::Schema.define(version: 2019_02_06_025653) do
+
+  create_table "invoices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "team_id"
+    t.bigint "week_id"
+    t.float "earned", default: 0.0
+    t.float "tips", default: 0.0
+    t.float "adjustments", default: 0.0
+    t.float "due", default: 0.0
+    t.float "paid", default: 0.0
+    t.boolean "wages_hourly", default: false
+    t.boolean "wages_service_price_only", default: false
+    t.float "wages_share", default: 0.0
+    t.float "wages_fee_amount", default: 0.0
+    t.integer "wages_fee_percent", default: 0
+    t.integer "hours_earned", default: 0
+    t.integer "hours_scheduled", default: 0
+    t.boolean "invoice_sent", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_invoices_on_team_id"
+    t.index ["week_id"], name: "index_invoices_on_week_id"
+  end
+
+  create_table "tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "title"
+    t.string "color"
+    t.string "tag_type"
+    t.integer "launch_id"
+    t.integer "ordering"
+  end
+
+  create_table "tags_teams", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "tag_id"
+    t.bigint "team_id"
+    t.index ["tag_id"], name: "index_tags_teams_on_tag_id"
+    t.index ["team_id"], name: "index_tags_teams_on_team_id"
+  end
 
   create_table "teams", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "launch_id"
+    t.boolean "status", default: true
     t.string "email"
     t.boolean "is_gst", default: false
+    t.boolean "is_confirmed", default: false
     t.string "abn"
     t.string "billing_name"
     t.string "address"
@@ -46,6 +88,16 @@ ActiveRecord::Schema.define(version: 2019_02_03_050050) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+  end
+
+  create_table "weeks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.date "start_date"
+    t.date "end_date"
+    t.date "payment_date"
+    t.boolean "is_parsed", default: false
+    t.boolean "is_processed", default: false
+    t.datetime "processed_at"
+    t.datetime "parsed_at"
   end
 
 end
