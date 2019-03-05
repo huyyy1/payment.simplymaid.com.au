@@ -52,5 +52,3 @@ production:
   database: launch_production
   username: root
   password: Chuvaki3
-  host: sql_srv:3306
-  port: 3306
