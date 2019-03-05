@@ -13,6 +13,10 @@ u = User.create(email: "alex.shkolnikov@gmail.com", password: "testpassword3")
 u.is_admin = true
 u.save
 
+u = User.create(email: "huy@simplymaid.com.au", password: "testpassword3")
+u.is_admin = true
+u.save
+
 p "Import teams"
 CSV.foreach(Rails.root.join('data', 'export.csv'), encoding: "utf-8", headers: :first_row) do |row|
   Team.create(
