@@ -9,7 +9,7 @@ Devise.setup do |config|
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
   # config.secret_key = '00f34f86d4bc135f66c0a55cbaf71b1e545b11820adbe0a7b64243baeff8446c1e9327426be657d63291817449aa1cef7d019a756c969c289f52e7763a7be436'
-  
+
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
@@ -287,4 +287,8 @@ Devise.setup do |config|
   # ActiveSupport.on_load(:devise_failure_app) do
   #   include Turbolinks::Controller
   # end
+
+  Rails.application.config.to_prepare do
+    Devise::SessionsController.layout "devise"
+  end
 end

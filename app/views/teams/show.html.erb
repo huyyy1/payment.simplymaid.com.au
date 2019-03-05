@@ -1,0 +1,86 @@
+<h1 class="ui header">
+  <%= @team.name %>
+  <div class="sub header"><%= link_to "Edit team", edit_team_path(@team.id) %></div>
+</h1>
+<br>
+
+<table class="ui celled striped table">
+  <tbody>
+    <tr>
+      <td>First Name</td>
+      <td><%= @team.first_name %></td>
+    </tr>
+    <tr>
+      <td>Last Name</td>
+      <td><%= @team.last_name %></td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td><%= @team.email %></td>
+    </tr>
+    <tr>
+      <td>Tags</td>
+      <td>
+        <% @team.tags.each do |tag| %>
+          <div class="ui label">
+            <i class="tag icon"></i> <%= tag.title %>
+          </div>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>GST</td>
+      <td><% if @team.is_gst %>Yes<% else %>No<% end %></td>
+    </tr>
+    <tr>
+      <td>ABN</td>
+      <td><%= @team.abn %></td>
+    </tr>
+    <tr>
+      <td>Billing name</td>
+      <td><%= @team.billing_name %></td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td><%= @team.address %></td>
+    </tr>
+    <tr>
+      <td>BSB</td>
+      <td><%= @team.bsb %></td>
+    </tr>
+    <tr>
+      <td>Account number</td>
+      <td><%= @team.account_number %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 class="ui header">Invoices</h2>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th style="width: 110px;" class="center aligned">Amount</th>
+      <th style="width: 80px;" class="center aligned">Paid</th>
+      <th style="width: 80px;" class="center aligned">PDF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @team.invoices.each do |invoice| %>
+      <tr>
+        <td>
+          <%= link_to invoice.week.start_date.strftime("%d/%m/%Y")+" - "+invoice.week.end_date.strftime("%d/%m/%Y"), invoice_path(invoice.id) %>
+        </td>
+        <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><%= number_to_currency(invoice.due) %></td>
+        <td class="center aligned"><% if invoice.invoice_sent %>Yes<% end %></td>
+        <td class="center aligned">
+          <% if @team.bsb.nil? && @team.account_number.nil? %>
+            <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
+          <% else %>
+            <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

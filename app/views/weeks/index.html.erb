@@ -1,0 +1,33 @@
+<h1 class="ui header">
+  Weeks
+  <div class="sub header">Available weeks</div>
+</h1>
+
+<div class="ui divider"></div>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th style="width: 180px;" class="center aligned">Pay date</th>
+      <th style="width: 110px;" class="center aligned">Amount</th>
+      <th style="width: 110px;" class="center aligned">Parsed</th>
+      <th style="width: 110px;" class="center aligned">Processed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @weeks.each do |week| %>
+      <tr>
+        <td>
+          <%= link_to week.start_date.strftime("%-d %B %Y")+" — "+week.end_date.strftime("%-d %B %Y"), week_path(week.id) %>
+        </td>
+        <td class="center aligned"><%= week.payment_date.strftime("%-d %B %Y") %></td>
+        <td class="center aligned <% if week.is_parsed %>positive<% end %>"><% if week.is_parsed %><span class="green"><%= week.invoices.count %></span><% else %><span class="red">No</span><% end %></td>
+        <td class="center aligned">
+          <% if week.payment_total > 0 %><%= number_to_currency(week.payment_total) %><% end %>
+        </td>
+        <td class="center aligned <% if week.is_processed %>positive<% end %>"><% if week.is_processed %><span class="green">Yes</span><% else %><span class="red">No</span><% end %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

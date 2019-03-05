@@ -1,0 +1,37 @@
+<h1 class="ui header">
+  Users
+  <div class="sub header">People with access to system</div>
+</h1>
+
+<div class="ui segment">
+  <p><b>Users</b> have access to week data, parse week and team data.<br><b>Admins</b> can do all, including create new users, update settings, process payments and create ABA files.</p>
+</div>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th style="width: 150px;" class="center aligned">Last Sign in</th>
+      <th style="width: 80px;" class="center aligned">Role</th>
+      <th style="width: 130px;" class="center aligned"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td>
+          <%= link_to user.email, edit_user_path(user.id) %>
+        </td>
+        <td class="center aligned"><%= user.last_sign_in_at.present? ? user.last_sign_in_at.strftime("%H:%M %d/%m/%Y") : "&mdash;".html_safe %></td>
+        <td class="center aligned <% if user.is_admin %>positive<% end %>"><% if user.is_admin %>Admin<% else %>User<% end %></td>
+        <td class="center aligned">
+          <% if !user.is_admin? %>
+            <%= link_to "Remove user", edit_team_path(user.id), class: "ui red basic button mini" %>
+          <% else %>
+            <span class="ui red basic button mini disabled" disabled>Remove user</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

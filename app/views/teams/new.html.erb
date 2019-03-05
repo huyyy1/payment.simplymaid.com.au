@@ -1,0 +1,72 @@
+<h1 class="ui header">
+  New Team
+</h1>
+<br>
+
+<%= form_with model: @team, local: true, html: { class: "ui form"} do |form| %>
+
+  <% if @team.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@team.errors.count, "error") %> prohibited
+        this team from being saved:
+      </h2>
+      <ul>
+        <% @team.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <label>Name</label>
+    <div class="three fields">
+      <div class="field">
+        <%= form.text_field :name, placeholder: "Name" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :first_name, placeholder: "First Name" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :last_name, placeholder: "Last Name" %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label>Address</label>
+    <div class="two fields">
+      <div class="field">
+        <%= form.email_field :email, placeholder: "Email" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :address, placeholder: "Address" %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label>Account Details</label>
+    <div class="four fields">
+      <div class="field">
+        <%= form.text_field :abn, placeholder: "ABN" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :billing_name, placeholder: "Billing Name" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :bsb, placeholder: "BSB" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :account_number, placeholder: "Account Number" %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="ui checkbox">
+      <%= form.check_box :is_gst %>
+      <label for="team_is_gst">Is GST Team</label>
+    </div>
+  </div>
+
+  <button class="ui button" type="submit">Create</button>
+<% end %>

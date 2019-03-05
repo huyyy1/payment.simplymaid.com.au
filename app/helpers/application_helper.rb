@@ -2,10 +2,10 @@ module ApplicationHelper
 
   def flash_class(level)
     case level.to_s
-      when "notice" then "notification is-info"
-      when "success" then "notification is-success"
-      when "error" then "notification is-warning"
-      when "alert" then "notification is-danger"
+      when "notice" then "ui info message"
+      when "success" then "ui positive message"
+      when "error" then "ui warning message"
+      when "alert" then "ui negative message"
     end
   end
 

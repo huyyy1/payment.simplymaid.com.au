@@ -1,42 +1,68 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Launch</title>
+    <title>SimplyMaid</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag    'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', media: 'all' %>
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
 
   <body>
-    <nav class="nav">
-      <div class="container is-fluid">
-        <ul>
-          <li>
-            <%= link_to root_path, class: "navbar-item" do %>
-              <i class="fa fa-tachometer"></i>
-              <span>Home</span>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to teams_path, class: "navbar-item" do %>
-              <i class="fa fa-users"></i>
-              <span>Teams</span>
-            <% end %>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <div id="app" class="container is-fluid">
-      <% flash.each do |key, value| %>
-        <section class="section">
-          <div class="<%= flash_class(key) %>">
-            <%= value %>
+    <div class="ui attached stackable menu">
+      <div class="ui container">
+        <%= link_to root_path, class: "item" do %>
+          <span class="i-logo"></span>
+        <% end %>
+        <%= link_to weeks_path, class: "item" do %>
+          <i class="calendar alternate outline icon"></i> Weeks
+        <% end %>
+        <div class="ui simple dropdown item">
+          <i class="user circle outline icon"></i> Teams
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <%= link_to "All Teams", teams_path, class: "item" %>
+            <%= link_to "New Team", new_team_path, class: "item" %>
           </div>
-        </section>
+        </div>
+        <% if current_user.is_admin %>
+          <div class="ui simple dropdown item">
+            <i class="user outline icon"></i> Users
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <%= link_to "All Users", users_path, class: "item" %>
+              <%= link_to "New User", new_user_path, class: "item" %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="ui simple dropdown item right">
+          <i class="user outline icon"></i> <%= current_user.email %>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <%= link_to "Change password", profile_path, class: "item" %>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "item" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui container" style="padding: 33px 0">
+      <% flash.each do |key, value| %>
+        <div class="<%= flash_class(key) %>" style="margin: 20px 0">
+          <%= value %>
+        </div>
       <% end %>
       <%= yield %>
     </div>
+
+
+
+
   </body>
 </html>

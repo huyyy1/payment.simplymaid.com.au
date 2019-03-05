@@ -1,21 +1,30 @@
-@import "bulma";
+@import "semantic";
 
-.fa + span {
-  padding-left: 0.3rem;
+body, html {
+  min-height: 100%;
+  position: relative;
 }
 
-.nav {
-  border-bottom: 1px solid #ccc;
-  background: #eee;
+.x-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 270px;
+  transform: translate(-50%, -50%);
+}
 
-  ul {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-  }
+.x-logo {
+  width: 170px;
+  margin: 0 auto;
 
-  li {
-    flex-basis: 1;
+  img {
+    width: 100%;
   }
+}
+
+.i-logo {
+  display: block;
+  height: 20px;
+  width: 170px;
+  background: image-url("header-logo.png") no-repeat 50% 50%/contain;
 }

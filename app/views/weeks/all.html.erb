@@ -1,0 +1,64 @@
+<h1 class="ui header">
+  <%= @week.start_date.strftime("%-d %B %Y")+" — "+@week.end_date.strftime("%-d %B %Y") %>
+</h1>
+
+<% if @week.is_parsed %>
+  <h2 class="ui header">All Invoices</h2>
+
+  <div class="ui tabular menu">
+    <%= link_to "Invoices to pay", week_path(@week.id), class: "item" %>
+    <%= link_to "All Invoices", all_week_path(@week.id), class: "active item" %>
+  </div>
+
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th style="width: 30px;" class="center aligned">#</th>
+        <th>Team</th>
+        <th style="width: 80px;" class="center aligned">Earned</th>
+        <th style="width: 80px;" class="center aligned">Tips</th>
+        <th style="width: 80px;" class="center aligned">Adj</th>
+        <th style="width: 80px;" class="center aligned">Due</th>
+        <th style="width: 80px;" class="center aligned">Paid</th>
+        <th style="width: 80px;" class="center aligned">PDF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @invoices.each_with_index do |invoice, counter| %>
+        <tr>
+          <td><%= params[:page].present? ? (params[:page].to_i-1)*25 + (counter + 1) : (counter + 1) %></td>
+
+          <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+            <td class="negative">
+              <%= link_to invoice.team.name, team_path(invoice.team.id), title: "Missing bank details. Please update" %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
+            </td>
+          <% else %>
+            <td>
+              <%= link_to invoice.team.name, team_path(invoice.team.id) %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
+            </td>
+          <% end %>
+
+          <td class="center aligned<% if invoice.earned > 0 %> positive<% end %><% if invoice.earned < 0 %> negative<% end %>"><%= number_to_currency(invoice.earned) %></td>
+
+          <td class="center aligned<% if invoice.tips > 0 %> positive<% end %><% if invoice.tips < 0 %> negative<% end %>"><%= number_to_currency(invoice.tips) %></td>
+
+          <td class="center aligned<% if invoice.adjustments > 0 %> positive<% end %><% if invoice.adjustments < 0 %> negative<% end %>"><%= number_to_currency(invoice.adjustments) %></td>
+
+          <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><%= number_to_currency(invoice.due) %></td>
+
+          <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>"><%= number_to_currency(invoice.paid) %></td>
+
+          <td>
+            <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+              <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
+            <% else %>
+              <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @invoices %>
+<% end %>

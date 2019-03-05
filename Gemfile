@@ -53,6 +53,19 @@ group :test do
   gem 'chromedriver-helper'
 end
 
-gem "bulma-rails", "~> 0.7.2"
 gem "devise"
 gem 'rest-client'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+gem "kaminari"
+gem 'httparty'
+gem 'aba'
+gem 'bsb'
+gem 'jquery-rails'
+gem 'figaro'
+gem 'premailer-rails'
+
+gem 'capistrano', '~> 3.11'
+gem 'capistrano-rails', '~> 1.4'
+gem 'capistrano-passenger', '~> 0.2.0'
+gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'

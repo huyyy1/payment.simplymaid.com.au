@@ -1,0 +1,26 @@
+<h1 class="ui header">
+  <%= @user.email %>
+</h1>
+<br>
+
+
+<div class="ui three steps">
+  <div class="step">
+    <div class="content">
+      <div class="title">Admin</div>
+      <div class="description"></div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="content">
+      <div class="title">Last signed in</div>
+      <div class="description js-time" data-ts="<%= @user.last_sign_in_at.to_i %>"><%= @user.last_sign_in_at.strftime("%-d %B %Y %H:%M") %></div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="content">
+      <div class="title">Created</div>
+      <div class="description"><%= @user.created_at.strftime("%-d %B %Y %H:%M") %></div>
+    </div>
+  </div>
+</div>

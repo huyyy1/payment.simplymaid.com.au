@@ -1,0 +1,8 @@
+<h2>Hello,</h2>
+<p>Week from <b><%= @week.start_date.strftime('%-d %B %Y') %></b> to <b><%= @week.end_date.strftime('%-d %B %Y') %></b> was successfully processed.</p>
+<% if @week.aba_file_gst.present? or @week.aba_file_no_gst.present? %>
+  <p>Please check attached ABA files for payments.</p>
+<% else %>
+  <p>No payments due.</p>
+<% end %>
+<p>Have a great day!</p>

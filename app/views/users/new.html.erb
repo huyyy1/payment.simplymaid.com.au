@@ -1,0 +1,47 @@
+<h1 class="ui header">
+  New User
+</h1>
+<br>
+
+<%= form_with model: @user, local: true, html: { class: "ui form"} do |form| %>
+
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@user.errors.count, "error") %> prohibited
+        this user from being saved:
+      </h2>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <div class="three fields">
+      <div class="field">
+        <%= form.email_field :email, placeholder: "Email" %>
+      </div>
+    </div>
+    <div class="three fields">
+      <div class="field">
+        <%= form.password_field :password, placeholder: "Password" %>
+      </div>
+    </div>
+    <div class="three fields">
+      <div class="field">
+        <%= form.password_field :password_confirmation, placeholder: "Password confirmation" %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="ui checkbox">
+      <%= form.check_box :is_admin %>
+      <label for="user_is_admin">Admin User</label>
+    </div>
+  </div>
+
+  <button class="ui brown button" type="submit">Create</button>
+<% end %>

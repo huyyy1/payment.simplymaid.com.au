@@ -1,0 +1,154 @@
+<h1 class="ui header">
+  <%= @week.start_date.strftime("%-d %B %Y")+" — "+@week.end_date.strftime("%-d %B %Y") %>
+</h1>
+
+<div class="ui three steps">
+  <div class="step <% if !@week.is_parsed && !@week.is_processed %>active<% end %>">
+    <i class="calendar alternate outline icon"></i>
+    <div class="content">
+      <div class="title">Payment Date</div>
+      <div class="description"><%= @week.payment_date.strftime("%-d %B %Y") %></div>
+    </div>
+  </div>
+  <% if @week.is_parsed %>
+    <% if @week.is_processed %>
+      <div class="step">
+        <i class="sync icon"></i>
+        <div class="content">
+          <span class="title">Parsed</span>
+          <div class="description">at <%= @week.parsed_at.strftime("%d/%m/%Y") %></div>
+        </div>
+      </div>
+      <div class="step">
+        <i class="sync icon"></i>
+        <div class="content">
+          <span class="title">Processed</span>
+          <div class="description">at <%= @week.parsed_at.strftime("%d/%m/%Y") %>.
+            <% if @week.aba_file_gst.present? %>
+              <%= link_to "GST", aba_gst_week_path(@week.id), class: "mini ui basic button" %>
+            <% end %>
+            <% if @week.aba_file_no_gst.present? %>
+              <%= link_to "NO GST", aba_no_gst_week_path(@week.id), class: "mini ui basic button" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="active step">
+        <i class="sync icon"></i>
+        <div class="content">
+          <div class="title"><%= link_to "Parse Again?", parse_week_path(@week.id), method: :post, class: "header" %></div>
+          <div class="description">at <%= @week.parsed_at.strftime("%d/%m/%Y") %>.
+            <strong><span title="Invoices to pay"><%= @week.to_pay_count %></span>/<span title="Invoices parsed"><%= @week.all_count %></span></strong>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <i class="edit outline icon"></i>
+        <div class="content">
+          <% all_good = true %>
+          <% @invoices.each_with_index do |invoice, counter| %>
+            <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+              <% all_good = false %>
+            <% end %>
+          <% end %>
+          <% if all_good %>
+            <div class="title"><%= link_to "Process", process_payments_week_path(@week.id), method: :post, class: "header" %></div>
+            <div class="description">Send invoices and generate ABA file</div>
+          <% else %>
+            <span class="title">Not processed</span>
+            <div class="description">Update teams details first</div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+  <% else %>
+    <div class="step">
+      <i class="sync icon"></i>
+      <div class="content">
+        <span class="title"><%= link_to "Parse", parse_week_path(@week.id), method: :post, class: "header" %></span>
+        <div class="description">Not yet parsed</div>
+      </div>
+    </div>
+    <div class="disabled step">
+      <i class="sync icon"></i>
+      <div class="content">
+        <span class="title">Not processed</span>
+        <div class="description">Parse first</div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @week.is_parsed %>
+  <h2 class="ui header">Invoices to pay</h2>
+
+  <div class="ui tabular menu">
+    <%= link_to "Invoices to pay", week_path(@week.id), class: "active item" %>
+    <%= link_to "All Invoices", all_week_path(@week.id), class: "item" %>
+  </div>
+
+  <% if @invoices.count > 0 %>
+
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th style="width: 30px;" class="center aligned">#</th>
+          <th>Team</th>
+          <th style="width: 80px;" class="center aligned">Earned</th>
+          <th style="width: 80px;" class="center aligned">Tips</th>
+          <th style="width: 80px;" class="center aligned">Adj</th>
+          <th style="width: 80px;" class="center aligned">Due</th>
+          <th style="width: 80px;" class="center aligned">PDF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invoices.each_with_index do |invoice, counter| %>
+          <tr>
+            <td><%= params[:page].present? ? (params[:page].to_i-1)*25 + (counter + 1) : (counter + 1) %></td>
+            <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+              <td class="negative">
+                <%= link_to invoice.team.name, team_path(invoice.team.id), title: "Missing bank details. Please update" %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
+              </td>
+            <% else %>
+              <td>
+                <%= link_to invoice.team.name, team_path(invoice.team.id) %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
+              </td>
+            <% end %>
+
+            <td class="center aligned<% if invoice.earned > 0 %> positive<% end %><% if invoice.earned < 0 %> negative<% end %>"><%= number_to_currency(invoice.earned) %></td>
+
+            <td class="center aligned<% if invoice.tips > 0 %> positive<% end %><% if invoice.tips < 0 %> negative<% end %>"><%= number_to_currency(invoice.tips) %></td>
+
+            <td class="center aligned<% if invoice.adjustments > 0 %> positive<% end %><% if invoice.adjustments < 0 %> negative<% end %>"><%= number_to_currency(invoice.adjustments) %></td>
+
+            <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><%= number_to_currency(invoice.due) %></td>
+
+            <td>
+              <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+                <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
+              <% else %>
+                <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+
+      </tbody>
+      <tfoot>
+        <tr>
+          <th style="width: 30px;" class="center aligned"></th>
+          <th>Total</th>
+          <th style="width: 80px;" class="center aligned"></th>
+          <th style="width: 80px;" class="center aligned"></th>
+          <th style="width: 80px;" class="center aligned"></th>
+          <th style="width: 80px;" class="center aligned"><%= number_to_currency(@week.total_due) %></th>
+          <th style="width: 80px;" class="center aligned"></th>
+        </tr>
+      </tfoot>
+    </table>
+  <% else %>
+    <p>No payments due</p>
+  <% end %>
+<% end %>

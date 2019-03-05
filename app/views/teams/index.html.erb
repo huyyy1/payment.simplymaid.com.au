@@ -1,0 +1,27 @@
+<h1 class="ui header">
+  Teams
+  <div class="sub header">Available teams</div>
+</h1>
+
+<div class="ui divider"></div>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th style="width: 110px;" class="center aligned">Active</th>
+      <th style="width: 80px;" class="center aligned"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+      <tr>
+        <td><%= link_to team.name, team_path(team.id) %></td>
+        <td class="center aligned <% if team.status %>positive<% end %>"><% if team.status %>Active<% end %></td>
+        <td class="center aligned"><%= link_to "Edit", edit_team_path(team.id), class: "ui green basic button mini" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @teams %>

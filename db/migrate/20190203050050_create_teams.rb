@@ -12,8 +12,9 @@ class CreateTeams < ActiveRecord::Migration[5.2]
       t.string :abn, length: 20
       t.string :billing_name
       t.string :address
-      t.string :bsb, length: 6
-      t.string :account_number, length: 20
+      t.string :bsb, length: 7
+      t.string :account_number, length: 11
+      t.boolean :is_validated, default: false
       t.text :notes
       t.timestamps
     end

@@ -50,5 +50,7 @@ test:
 production:
   <<: *default
   database: launch_production
-  username: launch
-  password: <%= ENV['LAUNCH_DATABASE_PASSWORD'] %>
+  username: root
+  password: Chuvaki3
+  host: sql_srv:3306
+  port: 3306

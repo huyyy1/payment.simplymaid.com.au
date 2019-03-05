@@ -1,5 +1,59 @@
 class TeamsController < ApplicationController
 
   before_action :authenticate_user!
-  
+
+  def index
+    @teams = Team.all.page params[:page]
+  end
+
+  def show
+    @team = Team.includes([:tags, :invoices]).find(params[:id])
+  end
+
+  def new
+    @team = Team.new
+  end
+
+  def create
+    @team = Team.new(team_params)
+    if @team.save
+      redirect_to @team
+    else
+      render 'new'
+    end
+  end
+
+  def edit
+    @team = Team.find(params[:id])
+  end
+
+  def update
+    @team = Team.find(params[:id])
+
+    if @team.update(team_params)
+      redirect_to @team
+    else
+      render 'edit'
+    end
+  end
+
+  private
+
+  def team_params
+    params.require(:team).permit(
+      :name,
+      :first_name,
+      :last_name,
+      :status,
+      :email,
+      :is_gst,
+      :abn,
+      :billing_name,
+      :address,
+      :bsb,
+      :account_number,
+      :notes
+    )
+  end
+
 end
