@@ -99,7 +99,7 @@
           <th style="width: 80px;" class="center aligned">Earned</th>
           <th style="width: 80px;" class="center aligned">Tips</th>
           <th style="width: 80px;" class="center aligned">Adj</th>
-          <th style="width: 80px;" class="center aligned">Due</th>
+          <th style="width: 80px;" class="center aligned"><b>Due</b></th>
           <th style="width: 80px;" class="center aligned">PDF</th>
         </tr>
       </thead>
@@ -107,9 +107,10 @@
         <% @invoices.each_with_index do |invoice, counter| %>
           <tr>
             <td><%= params[:page].present? ? (params[:page].to_i-1)*25 + (counter + 1) : (counter + 1) %></td>
-            <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+            <% if !invoice.team.is_validated? %>
               <td class="negative">
                 <%= link_to invoice.team.name, team_path(invoice.team.id), title: "Missing bank details. Please update" %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
+                <%= link_to "Edit Team Details", edit_team_path(invoice.team_id, week_back: @week.id), class: "edit-team" %>
               </td>
             <% else %>
               <td>
@@ -123,10 +124,10 @@
 
             <td class="center aligned<% if invoice.adjustments > 0 %> positive<% end %><% if invoice.adjustments < 0 %> negative<% end %>"><%= number_to_currency(invoice.adjustments) %></td>
 
-            <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><%= number_to_currency(invoice.due) %></td>
+            <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><b><%= number_to_currency(invoice.due) %></b></td>
 
             <td>
-              <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+              <% if !invoice.team.is_validated? %>
                 <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
               <% else %>
                 <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>
@@ -143,7 +144,7 @@
           <th style="width: 80px;" class="center aligned"></th>
           <th style="width: 80px;" class="center aligned"></th>
           <th style="width: 80px;" class="center aligned"></th>
-          <th style="width: 80px;" class="center aligned"><%= number_to_currency(@week.total_due) %></th>
+          <th style="width: 80px;" class="center aligned"><b style="font-size: 20px;"><%= number_to_currency(@week.total_due) %></b></th>
           <th style="width: 80px;" class="center aligned"></th>
         </tr>
       </tfoot>

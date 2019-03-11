@@ -74,7 +74,7 @@
         <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><%= number_to_currency(invoice.due) %></td>
         <td class="center aligned"><% if invoice.invoice_sent %>Yes<% end %></td>
         <td class="center aligned">
-          <% if @team.bsb.nil? && @team.account_number.nil? %>
+          <% if !@team.is_validated? %>
             <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
           <% else %>
             <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>

@@ -5,6 +5,10 @@
 
 <%= form_with model: @team, local: true, html: { class: "ui form"} do |form| %>
 
+  <% if params[:week_back].present? %>
+    <input type="hidden" value="<%= params[:week_back] %>" name="week_back">
+  <% end %>
+
   <% if @team.errors.any? %>
     <div id="error_explanation">
       <h2>

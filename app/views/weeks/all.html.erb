@@ -28,7 +28,7 @@
         <tr>
           <td><%= params[:page].present? ? (params[:page].to_i-1)*25 + (counter + 1) : (counter + 1) %></td>
 
-          <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+          <% if !invoice.team.is_validated? %>
             <td class="negative">
               <%= link_to invoice.team.name, team_path(invoice.team.id), title: "Missing bank details. Please update" %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
             </td>
@@ -49,7 +49,7 @@
           <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>"><%= number_to_currency(invoice.paid) %></td>
 
           <td>
-            <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+            <% if !invoice.team.is_validated? %>
               <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
             <% else %>
               <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>

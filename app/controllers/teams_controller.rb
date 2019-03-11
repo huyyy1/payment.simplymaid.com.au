@@ -31,7 +31,11 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
 
     if @team.update(team_params)
-      redirect_to @team
+      if params[:week_back].present?
+        redirect_to week_path(params[:week_back]), notice: "Team updated"
+      else
+        redirect_to @team, notice: "Team updated"
+      end
     else
       render 'edit'
     end
