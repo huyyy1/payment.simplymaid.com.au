@@ -74,9 +74,10 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     :address              => "smtp.gmail.com",
     :port                 => 587,
+    :domain               => 'simplymaid.com.au',
     :user_name            => 'work@simplymaid.com.au', # Change this to the email you're sending from
     :password             => 'Apple127$', # Change this to your password
-    :authentication       => "plain",
+    :authentication       => :plain,
     :enable_starttls_auto => true
   }
 
