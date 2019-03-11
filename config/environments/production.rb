@@ -71,12 +71,22 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   # SMTP settings for gmail
+  # config.action_mailer.smtp_settings = {
+  #   :address              => "smtp.gmail.com",
+  #   :port                 => 587,
+  #   :domain               => 'simplymaid.com.au',
+  #   :user_name            => 'work@simplymaid.com.au', # Change this to the email you're sending from
+  #   :password             => 'Apple127$', # Change this to your password
+  #   :authentication       => :plain,
+  #   :enable_starttls_auto => true
+  # }
+
   config.action_mailer.smtp_settings = {
-    :address              => "smtp.gmail.com",
+    :address              => "smtp-relay.gmail.com",
     :port                 => 587,
-    :domain               => 'simplymaid.com.au',
-    :user_name            => 'work@simplymaid.com.au', # Change this to the email you're sending from
-    :password             => 'Apple127$', # Change this to your password
+    :domain               => "roompay.com.au",
+    :user_name            => "info@roompay.com.au",
+    :password             => "Koukidess55$",
     :authentication       => :plain,
     :enable_starttls_auto => true
   }
