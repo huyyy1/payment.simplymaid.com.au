@@ -21,6 +21,10 @@ class Week < ApplicationRecord
     Invoice.where(week_id: week.id).sum(:due)
   end
 
+  def is_past
+    self.payment_date < (Time.now - 10.days) ? true : false
+  end
+
   def parse
     # "alex.shkolnikov@gmail.com"
     # "bozqiv-duwwoc-fybzA4"

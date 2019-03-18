@@ -26,7 +26,7 @@
         <td class="center aligned">
           <% if week.payment_total > 0 %><%= number_to_currency(week.payment_total) %><% end %>
         </td>
-        <td class="center aligned <% if week.is_processed %>positive<% end %>"><% if week.is_processed %><span class="green">Yes</span><% else %><span class="red">No</span><% end %></td>
+        <td class="center aligned <% if week.is_processed || week.is_past %>positive<% end %>"><% if week.is_processed || week.is_past %><span class="green">Yes</span><% else %><span class="red">No</span><% end %></td>
       </tr>
     <% end %>
   </tbody>

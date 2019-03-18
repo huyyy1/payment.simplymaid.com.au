@@ -100,6 +100,7 @@
           <th style="width: 80px;" class="center aligned">Tips</th>
           <th style="width: 80px;" class="center aligned">Adj</th>
           <th style="width: 80px;" class="center aligned"><b>Due</b></th>
+          <th style="width: 80px;" class="center aligned"><b>Paid</b></th>
           <th style="width: 80px;" class="center aligned">PDF</th>
         </tr>
       </thead>
@@ -125,6 +126,8 @@
             <td class="center aligned<% if invoice.adjustments > 0 %> positive<% end %><% if invoice.adjustments < 0 %> negative<% end %>"><%= number_to_currency(invoice.adjustments) %></td>
 
             <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><b><%= number_to_currency(invoice.due) %></b></td>
+
+            <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>"><b><%= number_to_currency(invoice.paid) %></b></td>
 
             <td>
               <% if !invoice.team.is_validated? %>
