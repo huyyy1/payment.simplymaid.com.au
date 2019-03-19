@@ -10,9 +10,14 @@ Rails.application.routes.draw do
       get 'aba_gst'
       get 'aba_no_gst'
     end
-
   end
-  resources :invoices
+
+  resources :invoices do
+    member do
+      get 'invoice_due'
+      get 'invoice_paid'
+    end
+  end
 
   get 'users/profile' => 'users#profile', as: 'profile'
   patch 'users/profile' => 'users#profile_update', as: 'profile_update'

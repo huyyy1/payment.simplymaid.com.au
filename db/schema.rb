@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_06_025653) do
+ActiveRecord::Schema.define(version: 2019_03_18_232400) do
 
   create_table "invoices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "team_id"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2019_02_06_025653) do
     t.text "aba_file_gst"
     t.text "aba_file_no_gst"
     t.datetime "aba_created_at"
+    t.boolean "is_past", default: false
   end
 
 end

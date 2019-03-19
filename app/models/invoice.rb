@@ -2,7 +2,8 @@ class Invoice < ApplicationRecord
   belongs_to :week
   belongs_to :team
 
-  scope :not_empty, -> { where('due > ?',0) }
+  scope :not_empty, -> { where('due > ? or paid > ?',0,0) }
+  scope :not_empty_due, -> { where('due > ?',0) }
 
   def generate_pdf
     invoice = self

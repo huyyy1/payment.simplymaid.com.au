@@ -46,18 +46,23 @@
       <div class="step">
         <i class="edit outline icon"></i>
         <div class="content">
-          <% all_good = true %>
-          <% @invoices.each_with_index do |invoice, counter| %>
-            <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
-              <% all_good = false %>
-            <% end %>
-          <% end %>
-          <% if all_good %>
-            <div class="title"><%= link_to "Process", process_payments_week_path(@week.id), method: :post, class: "header" %></div>
-            <div class="description">Send invoices and generate ABA file</div>
+          <% if @week.total_paid > 0 %>
+            <div class="title">Processed</div>
+            <div class="description">No ABA files available</div>
           <% else %>
-            <span class="title">Not processed</span>
-            <div class="description">Update teams details first</div>
+            <% all_good = true %>
+            <% @invoices.each_with_index do |invoice, counter| %>
+              <% if invoice.team.bsb.nil? && invoice.team.account_number.nil? %>
+                <% all_good = false %>
+              <% end %>
+            <% end %>
+            <% if all_good %>
+              <div class="title"><%= link_to "Process", process_payments_week_path(@week.id), method: :post, class: "header" %></div>
+              <div class="description">Send invoices and generate ABA file</div>
+            <% else %>
+              <span class="title">Not processed</span>
+              <div class="description">Update teams details first</div>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -82,10 +87,10 @@
 </div>
 
 <% if @week.is_parsed %>
-  <h2 class="ui header">Invoices to pay</h2>
+  <h2 class="ui header">Invoices to pay/paid</h2>
 
   <div class="ui tabular menu">
-    <%= link_to "Invoices to pay", week_path(@week.id), class: "active item" %>
+    <%= link_to "Invoices to pay/paid", week_path(@week.id), class: "active item" %>
     <%= link_to "All Invoices", all_week_path(@week.id), class: "item" %>
   </div>
 
@@ -96,12 +101,8 @@
         <tr>
           <th style="width: 30px;" class="center aligned">#</th>
           <th>Team</th>
-          <th style="width: 80px;" class="center aligned">Earned</th>
-          <th style="width: 80px;" class="center aligned">Tips</th>
-          <th style="width: 80px;" class="center aligned">Adj</th>
           <th style="width: 80px;" class="center aligned"><b>Due</b></th>
           <th style="width: 80px;" class="center aligned"><b>Paid</b></th>
-          <th style="width: 80px;" class="center aligned">PDF</th>
         </tr>
       </thead>
       <tbody>
@@ -118,22 +119,30 @@
                 <%= link_to invoice.team.name, team_path(invoice.team.id) %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
               </td>
             <% end %>
-
-            <td class="center aligned<% if invoice.earned > 0 %> positive<% end %><% if invoice.earned < 0 %> negative<% end %>"><%= number_to_currency(invoice.earned) %></td>
-
-            <td class="center aligned<% if invoice.tips > 0 %> positive<% end %><% if invoice.tips < 0 %> negative<% end %>"><%= number_to_currency(invoice.tips) %></td>
-
-            <td class="center aligned<% if invoice.adjustments > 0 %> positive<% end %><% if invoice.adjustments < 0 %> negative<% end %>"><%= number_to_currency(invoice.adjustments) %></td>
-
-            <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><b><%= number_to_currency(invoice.due) %></b></td>
-
-            <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>"><b><%= number_to_currency(invoice.paid) %></b></td>
-
-            <td>
-              <% if !invoice.team.is_validated? %>
-                <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
+            <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>">
+              <% if invoice.due > 0 && invoice.team.is_validated? %>
+                <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui positive basic button mini btn2" do %>
+                  <i class="file alternate outline"></i>
+                  <%= number_to_currency(invoice.due) %>
+                <% end %>
               <% else %>
-                <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>
+                <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui red disabled basic button mini btn2" do %>
+                  <i class="file alternate outline"></i>
+                  <%= number_to_currency(invoice.due) %>
+                <% end %>
+              <% end %>
+            </td>
+            <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>">
+              <% if invoice.paid > 0 && invoice.team.is_validated? %>
+                <%= link_to invoice_paid_invoice_path(invoice, format: :pdf), class: "ui positive basic button mini btn2" do %>
+                  <i class="file alternate outline"></i>
+                  <%= number_to_currency(invoice.paid) %>
+                <% end %>
+              <% else %>
+                <%= link_to invoice_paid_invoice_path(invoice, format: :pdf), class: "ui red disabled basic button mini btn2" do %>
+                  <i class="file alternate outline"></i>
+                  <%= number_to_currency(invoice.paid) %>
+                <% end %>
               <% end %>
             </td>
           </tr>
@@ -144,11 +153,8 @@
         <tr>
           <th style="width: 30px;" class="center aligned"></th>
           <th>Total</th>
-          <th style="width: 80px;" class="center aligned"></th>
-          <th style="width: 80px;" class="center aligned"></th>
-          <th style="width: 80px;" class="center aligned"></th>
           <th style="width: 80px;" class="center aligned"><b style="font-size: 20px;"><%= number_to_currency(@week.total_due) %></b></th>
-          <th style="width: 80px;" class="center aligned"></th>
+          <th style="width: 80px;" class="center aligned"><b style="font-size: 20px;"><%= number_to_currency(@week.total_paid) %></b></th>
         </tr>
       </tfoot>
     </table>

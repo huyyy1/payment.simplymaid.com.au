@@ -21,8 +21,9 @@ class Week < ApplicationRecord
     Invoice.where(week_id: week.id).sum(:due)
   end
 
-  def is_past
-    self.payment_date < (Time.now - 10.days) ? true : false
+  def total_paid
+    week = self
+    Invoice.where(week_id: week.id).sum(:paid)
   end
 
   def parse
@@ -36,6 +37,7 @@ class Week < ApplicationRecord
         is_parsed: false,
         parsed_at: nil,
         is_processed: false,
+        is_past: false,
         processed_at: nil
       )
       Invoice.where(week_id: week.id).destroy_all
@@ -49,6 +51,7 @@ class Week < ApplicationRecord
 
       page = 0
       finished = false
+      paid = 0
 
       until finished do
         results = RestClient.get "https://simplymaidaus.launch27.com/v1/staff/teams/payments/summary?from=#{week.start_date.strftime("%Y-%m-%d")}&limit=50&offset=#{page*50}&to=#{week.end_date.strftime("%Y-%m-%d")}", {content_type: :json, accept: :json, Authorization: "Bearer #{bearer}"}
@@ -74,6 +77,8 @@ class Week < ApplicationRecord
                 @team.tags << @tag
               end
             end
+
+            paid = paid + result_json["paid"].to_f
 
             @invoice = Invoice.create(
               team_id: @team.id,
@@ -103,6 +108,7 @@ class Week < ApplicationRecord
       week.update_columns(
         is_parsed: true,
         parsed_at: Time.now,
+        is_past: paid > 0 ? true : false,
         payment_total: week.total_due
       )
     end
@@ -227,51 +233,58 @@ class Week < ApplicationRecord
         if !week.is_parsed
           week.parse
         end
-        invoices = Invoice.includes(:team).where(week_id: week.id).where('due > ?', 0).all
-        if invoices.count > 0
-          # check if teams completed
-          all_ok = true
-          invoices.each do |invoice|
-            if invoice.team.bsb.nil? && invoice.team.account_number.nil?
-              all_ok = false
-            end
-          end
-          if !all_ok
-            # remind admins to update details
-            User.where(is_admin: true).each do |user|
-              InvoiceMailer.with(week: week, user: user).missing_team_details_email.deliver
-            end
-            result[:success] = false
-            result[:message] = 'Not all teams have BSB and Account number details'
-          else
-            # invoices.each do |invoice|
-            #   InvoiceMailer.with(invoice: invoice).invoice_email.deliver
-            # end
-            results = week.create_aba
-            if results[:success]
-              week.update_attributes(
-                is_processed: true,
-                processed_at: Time.now
-              )
-              User.where(is_admin: true).each do |user|
-                InvoiceMailer.with(week: week, user: user).payments_processed_email.deliver
-              end
-              result[:success] = true
-              result[:message] = 'Week was successfully processed'
-            else
-              User.where(is_admin: true).each do |user|
-                InvoiceMailer.with(week: week, user: user).missing_team_details_email.deliver
-              end
-              result[:success] = false
-              result[:message] = 'Internal error'
-            end
-          end
-        else
-          User.where(is_admin: true).each do |user|
-            InvoiceMailer.with(week: week, user: user).no_payments_due_email.deliver
-          end
+        if week.total_paid > 0
           result[:success] = false
           result[:message] = 'Nothing to pay'
+        else
+          invoices = Invoice.includes(:team).where(week_id: week.id).where('due > ?', 0).all
+          if invoices.count > 0
+            # check if teams completed
+            all_ok = true
+            invoices.each do |invoice|
+              if invoice.team.bsb.nil? && invoice.team.account_number.nil?
+                all_ok = false
+              end
+            end
+            if !all_ok
+              # remind admins to update details
+              User.where(is_admin: true).each do |user|
+                InvoiceMailer.with(week: week, user: user).missing_team_details_email.deliver_later
+              end
+              result[:success] = false
+              result[:message] = 'Not all teams have BSB and Account number details'
+            else
+              results = week.create_aba
+              if results[:success]
+                if Rails.env.development?
+                  invoices.each do |invoice|
+                    InvoiceMailer.with(invoice: invoice).invoice_email.deliver_later
+                  end
+                end
+                week.update_attributes(
+                  is_processed: true,
+                  processed_at: Time.now
+                )
+                User.where(is_admin: true).each do |user|
+                  InvoiceMailer.with(week: week, user: user).payments_processed_email.deliver_later
+                end
+                result[:success] = true
+                result[:message] = 'Week was successfully processed'
+              else
+                User.where(is_admin: true).each do |user|
+                  InvoiceMailer.with(week: week, user: user, meta: results[:errors]).aba_error_email.deliver_later
+                end
+                result[:success] = false
+                result[:message] = 'Problems with ABA file'
+              end
+            end
+          else
+            User.where(is_admin: true).each do |user|
+              InvoiceMailer.with(week: week, user: user).no_payments_due_email.deliver_later
+            end
+            result[:success] = false
+            result[:message] = 'Nothing to pay'
+          end
         end
       end
     else

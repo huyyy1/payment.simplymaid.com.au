@@ -51,6 +51,7 @@ group :development do
   gem 'capistrano-passenger', '~> 0.2.0'
   gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
   gem "capistrano-yarn"
+  gem 'capistrano-sidekiq', github: 'seuros/capistrano-sidekiq'
 end
 
 group :test do
@@ -69,3 +70,4 @@ gem 'bsb'
 gem 'jquery-rails'
 gem 'figaro'
 gem 'premailer-rails'
+gem 'sidekiq'

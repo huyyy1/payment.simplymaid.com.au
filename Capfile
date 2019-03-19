@@ -5,6 +5,7 @@ require "capistrano/passenger"
 require "capistrano/yarn"
 require "capistrano/rbenv"
 require "capistrano/bundler"
+require "capistrano/sidekiq"
 
 require "capistrano/scm/git"
 install_plugin Capistrano::SCM::Git

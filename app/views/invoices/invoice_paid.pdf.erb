@@ -1,0 +1,309 @@
+<html>
+  <head>
+    <title>Receipt</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet"/>
+    <style>
+      body {
+
+        font-family: Arial;
+        font-size: 18px;
+      }
+
+      .header {
+        position: relative;
+      }
+
+      .header--address {
+        font-size: 19px;
+        width: 45%;
+      }
+
+      .header--address h3 {
+        font-size: 25px;
+      }
+
+      .header--address p {
+        line-height: 1.5
+      }
+
+      .header--logo {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40%;
+      }
+
+      .header--logo img {
+        width: 100%;
+      }
+
+      .divider {
+        margin: 20px 0 0 0;
+        height: 2px;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
+
+      .clearfix:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .content {
+        margin: 20px 0 0 0;
+      }
+
+      .content h1 {
+        text-align: center;
+      }
+
+      .content--details {
+        width: 100%;
+        margin: 20px 0 0 0;
+        clear: both;
+      }
+
+      .content--address {
+        width: 42%;
+        float: left;
+      }
+
+      .content--address-title {
+        font-weight: bold;
+        font-size: 18px;
+        white-space: nowrap;
+        width: 180px;
+      }
+
+      .content--address-content h4 {
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+      }
+
+      .content--address-content p {
+        line-height: 1.4;
+      }
+
+      .content--bank-details {
+        float: right;
+        width: 40%;
+        clear: none;
+      }
+
+      .content--bank-details th {
+        text-align: left;
+        padding: 3px;
+      }
+
+      .content--bank-details table {
+        width: 100%;
+      }
+
+      .content--bank-details td {
+        padding: 3px;
+      }
+
+      .content--bank-details h4 {
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+      }
+
+      .maintable {
+        margin: 20px 0 0 0;
+      }
+
+      .maintable table {
+        width: 100%;
+        font-size: 18px;
+        text-align: left;
+        border-collapse: collapse;
+      }
+
+      .maintable table thead {
+        border: 1px solid #000;
+        background: #eee;
+      }
+
+      .maintable table thead th {
+        padding: 6px;
+        border-left: 1px solid #000;
+      }
+
+      .maintable table tbody {
+        border: 1px solid #000;
+      }
+
+      .maintable table tbody td {
+        padding: 6px;
+        border-left: 1px solid #000;
+        vertical-align: top;
+        line-height: 1.7
+      }
+
+      .maintable table tfoot {
+
+      }
+
+      .maintable table tfoot th {
+        padding: 6px;
+        line-height: 1.7
+      }
+
+      .maintable table tfoot td {
+        padding: 6px;
+        border-bottom: 1px solid #000;
+        vertical-align: top;
+        line-height: 1.7
+      }
+
+      .maintable table tfoot td.b {
+        font-weight: bold;
+      }
+
+      .notes {
+        margin: 40px 0 0 0;
+      }
+
+      .notes p {
+        line-height: 1.3
+      }
+
+    </style>
+  </head>
+  <%
+
+  if @invoice.nil?
+    @invoice = invoice
+  end
+
+  if @invoice.team.is_gst
+    before = @invoice.paid.to_f/1.1
+    gst = @invoice.paid - before
+    total = @invoice.paid
+  else
+    before = @invoice.paid
+    total = @invoice.paid
+  end
+
+  %>
+  <body>
+    <div class="header">
+      <div class="header--address">
+        <h3>From &mdash; Recipient</h3>
+        <p>Simply Maid<br>ABN: 63 570 041 787<br>Suite 125, 377 Kent St<br>Sydney, NSW, 2000<br><br>1300 009 363<br>hello@simplymaid.com.au</p>
+      </div>
+      <div class="header--logo">
+        <%= wicked_pdf_image_tag 'logo.png' %>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="content">
+      <h1>Recipient created tax invoice</h1>
+      <div class="content--details clearfix">
+        <div class="content--address">
+          <div class="content--address-content">
+            <h4>To - Supplier/Provider:</h4>
+            <p>Name: <%= @invoice.team.name %><br>
+            Address: <%= @invoice.team.address %><br>
+            ABN: <%= @invoice.team.abn %></p>
+          </div>
+        </div>
+        <div class="content--bank-details">
+          <h4></h4>
+          <table>
+            <tr>
+              <th>Date</th>
+              <td><%= Time.now.strftime("%Y/%m/%d") %></td>
+            </tr>
+            <tr>
+              <th>Nominated Bank Account</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>BSB</th>
+              <td><%= @invoice.team.bsb %></td>
+            </tr>
+            <tr>
+              <th>Account</th>
+              <td><%= @invoice.team.account_number %></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="maintable">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit price</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Cleaning services<br>
+              Jobs completed between:<br>
+              <%= @invoice.week.start_date.strftime("%Y/%m/%d") %> - <%= @invoice.week.end_date.strftime("%Y/%m/%d") %>
+            </td>
+            <td>1</td>
+            <td><%= number_to_currency(before) %></td>
+            <td><%= number_to_currency(before) %></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <% if @invoice.team.is_gst %>
+            <tr>
+              <th></th>
+              <th></th>
+              <td class="b">Total without GST</td>
+              <td><%= number_to_currency(before) %></td>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              <td class="b">GST</td>
+              <td><%= number_to_currency(gst) %></td>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              <td class="b">Total with GST</td>
+              <td><%= number_to_currency(total) %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <th></th>
+              <th></th>
+              <td class="b">Total</td>
+              <td><%= number_to_currency(total) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <th></th>
+            <th></th>
+            <td class="b">Amount paid into nominated bank account</td>
+            <td><%= number_to_currency(total) %></td>
+          </tr>
+          <tr>
+            <th></th>
+            <th></th>
+            <td class="b">Balance Due</td>
+            <td><%= number_to_currency(0) %></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="notes">
+      <p>If you are GST registered please let us know so that we can provide you with an RCTI - Recipient Created Tax Invoice for your BAS.</p>
+      <h3>Written Agreement</h3>
+      <p>The recipient and the supplier/provider declare that this agreement relates to the above services. The supplier/provider will not issue tax invoices in respect of these services. The supplier/provider acknowledges that it is not registered for GST and that it will notify the recipient if they do become registered. The recipient acknowledges that it is registered for GST and that it will notify the supplier/provider if it ceases to be registered. Acceptance of this recipient created invoice (RCI) constitutes acceptance of the terms of this written agreement. Both parties to this supply agree that they are parties to an (RCI) agreement. The supplier/provider must notify the recipient within 21 days of receiving this document if the supplier/provider does not wish to accept the proposed agreement.</p>
+      <h4>This form is used for record-keeping purposes only and will not calculate totals for you</h4>
+    </div>
+  </body>
+</html>

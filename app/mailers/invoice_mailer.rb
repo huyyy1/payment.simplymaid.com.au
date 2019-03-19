@@ -6,6 +6,13 @@ class InvoiceMailer < ApplicationMailer
     mail(to: @user.email, subject: "SimplyMaid: #{@week.start_date.strftime('%-d %B %Y')} to #{@week.end_date.strftime('%-d %B %Y')}: Processing error")
   end
 
+  def aba_error_email
+    @week = params[:week]
+    @user = params[:user]
+    @meta = params[:meta]
+    mail(to: @user.email, subject: "SimplyMaid: #{@week.start_date.strftime('%-d %B %Y')} to #{@week.end_date.strftime('%-d %B %Y')}: ABA Error")
+  end
+
   def no_payments_due_email
     @week = params[:week]
     @user = params[:user]
