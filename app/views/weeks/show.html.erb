@@ -101,8 +101,8 @@
         <tr>
           <th style="width: 30px;" class="center aligned">#</th>
           <th>Team</th>
-          <th style="width: 80px;" class="center aligned"><b>Due</b></th>
-          <th style="width: 80px;" class="center aligned"><b>Paid</b></th>
+          <th style="width: 140px;" class="center aligned"><b>Due</b></th>
+          <th style="width: 140px;" class="center aligned"><b>Paid</b></th>
         </tr>
       </thead>
       <tbody>
@@ -121,9 +121,14 @@
             <% end %>
             <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>">
               <% if invoice.due > 0 && invoice.team.is_validated? %>
-                <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui positive basic button mini btn2" do %>
-                  <i class="file alternate outline"></i>
-                  <%= number_to_currency(invoice.due) %>
+                <% if invoice.due_receipt_sent %>
+                  <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui positive basic button mini btn2" do %>
+                    <span style="white-space: nowrap"><i class="at icon" title="Invoice sent to client at: <%= invoice.due_receipt_sent_at.strftime("%d-%m-%Y") %>"></i><%= number_to_currency(invoice.due) %></span>
+                  <% end %>
+                <% else %>
+                  <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui positive basic button mini btn2" do %>
+                    <%= number_to_currency(invoice.due) %>
+                  <% end %>
                 <% end %>
               <% else %>
                 <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui red disabled basic button mini btn2" do %>
@@ -135,8 +140,11 @@
             <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>">
               <% if invoice.paid > 0 && invoice.team.is_validated? %>
                 <%= link_to invoice_paid_invoice_path(invoice, format: :pdf), class: "ui positive basic button mini btn2" do %>
-                  <i class="file alternate outline"></i>
-                  <%= number_to_currency(invoice.paid) %>
+                  <% if invoice.paid_receipt_sent %>
+                    <i class="at icon" title="Invoice sent to client at: <%= invoice.paid_receipt_sent_at.strftime("%d-%m-%Y") %>"></i><%= number_to_currency(invoice.paid) %>
+                  <% else %>
+                    <%= number_to_currency(invoice.paid) %>
+                  <% end %>
                 <% end %>
               <% else %>
                 <%= link_to invoice_paid_invoice_path(invoice, format: :pdf), class: "ui red disabled basic button mini btn2" do %>

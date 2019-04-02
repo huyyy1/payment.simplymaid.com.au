@@ -60,27 +60,64 @@
   <thead>
     <tr>
       <th>Week</th>
-      <th style="width: 110px;" class="center aligned">Amount</th>
-      <th style="width: 80px;" class="center aligned">Paid</th>
-      <th style="width: 80px;" class="center aligned">PDF</th>
+      <th style="width: 110px;" class="center aligned">Due</th>
+      <th style="width: 110px;" class="center aligned">Paid</th>
     </tr>
   </thead>
   <tbody>
     <% @team.invoices.each do |invoice| %>
+      <% @total_due = @total_due + invoice.due %>
+      <% @total_paid = @total_paid + invoice.paid %>
       <tr>
         <td>
           <%= link_to invoice.week.start_date.strftime("%d/%m/%Y")+" - "+invoice.week.end_date.strftime("%d/%m/%Y"), invoice_path(invoice.id) %>
         </td>
-        <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>"><%= number_to_currency(invoice.due) %></td>
-        <td class="center aligned"><% if invoice.invoice_sent %>Yes<% end %></td>
-        <td class="center aligned">
-          <% if !@team.is_validated? %>
-            <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui red disabled basic button mini", title: "Please update bank details for team" %>
+        <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>">
+          <% if invoice.due > 0 && invoice.team.is_validated? %>
+            <div class="ui buttons">
+              <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
+                <i class="file alternate outline"></i>
+                <%= number_to_currency(invoice.due) %>
+              <% end %>
+              <%= link_to invoice_due_mail_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
+                <i class="file alternate outline"></i>
+                Email
+              <% end %>
+            </div>
           <% else %>
-            <%= link_to "Invoice", invoice_path(invoice.id, format: :pdf), class: "ui blue basic button mini" %>
+            <%= link_to invoice_due_invoice_path(invoice, format: :pdf), class: "ui red disabled basic button  btn2" do %>
+              <i class="file alternate outline"></i>
+              <%= number_to_currency(invoice.due) %>
+            <% end %>
+          <% end %>
+        </td>
+        <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>">
+          <% if invoice.paid > 0 && invoice.team.is_validated? %>
+            <div class="ui buttons">
+              <%= link_to invoice_paid_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
+                <i class="file alternate outline"></i>
+                <%= number_to_currency(invoice.paid) %>
+              <% end %>
+              <%= link_to invoice_paid_mail_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
+                <i class="file alternate outline"></i>
+                Email
+              <% end %>
+            </div>
+          <% else %>
+            <%= link_to invoice_paid_invoice_path(invoice, format: :pdf), class: "ui red disabled basic button  btn2" do %>
+              <i class="file alternate outline"></i>
+              <%= number_to_currency(invoice.paid) %>
+            <% end %>
           <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
+  <tfoot>
+    <tr>
+      <th>Total</th>
+      <th style="width: 110px;" class="center aligned"><big><%= number_to_currency(@total_due) %></big></th>
+      <th style="width: 110px;" class="center aligned"><big><%= number_to_currency(@total_paid) %></big></th>
+    </tr>
+  </tfoot>
 </table>

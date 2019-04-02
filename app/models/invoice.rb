@@ -18,4 +18,32 @@ class Invoice < ApplicationRecord
     )
     pdf
   end
+
+  def generate_pdf_due
+    invoice = self
+    string = ApplicationController.new.render_to_string(
+      template: 'invoices/show_v2.pdf.erb',
+      layout: nil,
+      locals: { invoice: invoice, mode: "due" }
+    )
+    pdf = WickedPdf.new.pdf_from_string(
+      string,
+      dpi: "300"
+    )
+    pdf
+  end
+
+  def generate_pdf_paid
+    invoice = self
+    string = ApplicationController.new.render_to_string(
+      template: 'invoices/show_v2.pdf.erb',
+      layout: nil,
+      locals: { invoice: invoice, mode: "paid" }
+    )
+    pdf = WickedPdf.new.pdf_from_string(
+      string,
+      dpi: "300"
+    )
+    pdf
+  end
 end

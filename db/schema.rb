@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_18_232400) do
+ActiveRecord::Schema.define(version: 2019_04_02_023249) do
 
   create_table "invoices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "team_id"
@@ -30,6 +30,10 @@ ActiveRecord::Schema.define(version: 2019_03_18_232400) do
     t.boolean "invoice_sent", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "due_receipt_sent", default: false
+    t.datetime "due_receipt_sent_at"
+    t.boolean "paid_receipt_sent", default: false
+    t.datetime "paid_receipt_sent_at"
     t.index ["team_id"], name: "index_invoices_on_team_id"
     t.index ["week_id"], name: "index_invoices_on_week_id"
   end

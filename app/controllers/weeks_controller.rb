@@ -66,4 +66,9 @@ class WeeksController < ApplicationController
     end
   end
 
+  def prepare_aba
+    @week = Week.find(params[:id])
+    @invoices = Invoice.not_empty.includes(:team).where(week_id: @week.id).all
+  end
+
 end

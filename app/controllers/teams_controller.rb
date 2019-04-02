@@ -8,6 +8,8 @@ class TeamsController < ApplicationController
 
   def show
     @team = Team.includes([:tags, :invoices]).find(params[:id])
+    @total_due = 0
+    @total_paid = 0
   end
 
   def new

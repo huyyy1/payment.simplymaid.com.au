@@ -256,9 +256,15 @@ class Week < ApplicationRecord
             else
               results = week.create_aba
               if results[:success]
-                if Rails.env.development?
+                if week.total_paid == 0
                   invoices.each do |invoice|
-                    InvoiceMailer.with(invoice: invoice).invoice_email.deliver_later
+                    if !invoice.due_receipt_sent
+                      InvoiceMailer.with(invoice: invoice).invoice_email.deliver_later
+                      invoice.update_columns(
+                        due_receipt_sent: true,
+                        due_receipt_sent_at: Time.now
+                      )   
+                    end
                   end
                 end
                 week.update_attributes(
@@ -299,4 +305,15 @@ class Week < ApplicationRecord
     week = Week.find(19)
     week.process_payments
   end
+
+  def self.cron_test
+    require 'fileutils'
+    FileUtils.touch('/home/deployer/launch/tmp/cron.txt')
+  end
+
+  def self.process_current_week
+    week = Week.where('payment_date >= ? and payment_date <= ?', (DateTime.now - 3.days).to_date, (DateTime.now + 3.days).to_date).first
+    week.process_payments
+  end
+
 end

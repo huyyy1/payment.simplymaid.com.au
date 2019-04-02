@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       get 'all'
       get 'aba_gst'
       get 'aba_no_gst'
+      get 'prepare_aba'
+      post 'generate_aba'
     end
   end
 
@@ -16,6 +18,8 @@ Rails.application.routes.draw do
     member do
       get 'invoice_due'
       get 'invoice_paid'
+      get 'invoice_due_mail'
+      get 'invoice_paid_mail'
     end
   end
 

@@ -50,4 +50,26 @@ class InvoiceMailer < ApplicationMailer
     mail(to: @invoice.team.email, subject: "SimplyMaid: Invoice for period from #{@invoice.week.start_date.strftime('%-d %B %Y')} to #{@invoice.week.end_date.strftime('%-d %B %Y')}")
   end
 
+  def invoice_email_due
+    @invoice = params[:invoice]
+
+    attachments["invoice_#{@invoice.week.start_date.strftime('%d%m%Y')}_#{@invoice.week.end_date.strftime('%d%m%Y')}.pdf"] = {
+      mime_type: 'application/pdf',
+      content: @invoice.generate_pdf_due
+    }
+
+    mail(to: @invoice.team.email, subject: "SimplyMaid: Invoice for period from #{@invoice.week.start_date.strftime('%-d %B %Y')} to #{@invoice.week.end_date.strftime('%-d %B %Y')}")
+  end
+
+  def invoice_email_paid
+    @invoice = params[:invoice]
+
+    attachments["invoice_#{@invoice.week.start_date.strftime('%d%m%Y')}_#{@invoice.week.end_date.strftime('%d%m%Y')}.pdf"] = {
+      mime_type: 'application/pdf',
+      content: @invoice.generate_pdf_paid
+    }
+
+    mail(to: @invoice.team.email, subject: "SimplyMaid: Invoice for period from #{@invoice.week.start_date.strftime('%-d %B %Y')} to #{@invoice.week.end_date.strftime('%-d %B %Y')}")
+  end
+
 end
