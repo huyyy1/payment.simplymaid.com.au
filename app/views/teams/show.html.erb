@@ -52,6 +52,14 @@
       <td>Account number</td>
       <td><%= @team.account_number %></td>
     </tr>
+    <tr>
+      <td>Created at</td>
+      <td><%= @team.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+    </tr>
+    <tr>
+      <td>Last updated at</td>
+      <td><%= @team.updated_at.strftime("%d/%m/%Y %H:%M") %></td>
+    </tr>
   </tbody>
 </table>
 
@@ -90,6 +98,7 @@
               <%= number_to_currency(invoice.due) %>
             <% end %>
           <% end %>
+          
         </td>
         <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>">
           <% if invoice.paid > 0 && invoice.team.is_validated? %>

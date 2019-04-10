@@ -312,8 +312,8 @@ class Week < ApplicationRecord
   end
 
   def self.process_current_week
-    week = Week.where('payment_date >= ? and payment_date <= ?', (DateTime.now - 3.days).to_date, (DateTime.now + 3.days).to_date).first
-    week.process_payments
+    # week = Week.where('payment_date >= ? and payment_date <= ?', (DateTime.now - 3.days).to_date, (DateTime.now + 3.days).to_date).first
+    # week.process_payments
   end
 
 end

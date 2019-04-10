@@ -16,7 +16,17 @@
   <tbody>
     <% @teams.each do |team| %>
       <tr>
-        <td><%= link_to team.name, team_path(team.id) %></td>
+        <td><%= link_to team.name, team_path(team.id) %>
+
+          <% if team.created_at > (Time.now - 3.days) %>
+              <span class="ui mini label yellow">New team</span>
+            <% else %>
+              <% if team.updated_at > (Time.now - 3.days) %>
+                <span class="ui mini label yellow">Recently updated</span>
+              <% end %>
+            <% end %>
+        
+        </td>
         <td class="center aligned <% if team.status %>positive<% end %>"><% if team.status %>Active<% end %></td>
         <td class="center aligned"><%= link_to "Edit", edit_team_path(team.id), class: "ui green basic button mini" %></td>
       </tr>

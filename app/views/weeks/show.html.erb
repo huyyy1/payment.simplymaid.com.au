@@ -113,10 +113,26 @@
               <td class="negative">
                 <%= link_to invoice.team.name, team_path(invoice.team.id), title: "Missing bank details. Please update" %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
                 <%= link_to "Edit Team Details", edit_team_path(invoice.team_id, week_back: @week.id), class: "edit-team" %>
+
+                <% if invoice.team.created_at > (Time.now - 3.days) %>
+                  <span class="ui mini label yellow">New team</span>
+                <% else %>
+                  <% if invoice.team.updated_at > (Time.now - 3.days) %>
+                    <span class="ui mini label yellow">Recently updated</span>
+                  <% end %>
+                <% end %>
               </td>
             <% else %>
               <td>
                 <%= link_to invoice.team.name, team_path(invoice.team.id) %><% if invoice.team.is_gst %> <span class="ui mini label">GST</span><% end %>
+
+                <% if invoice.team.created_at > (Time.now - 3.days) %>
+                  <span class="ui mini label yellow">New team</span>
+                <% else %>
+                  <% if invoice.team.updated_at > (Time.now - 3.days) %>
+                    <span class="ui mini label yellow">Recently updated</span>
+                  <% end %>
+                <% end %>
               </td>
             <% end %>
             <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>">

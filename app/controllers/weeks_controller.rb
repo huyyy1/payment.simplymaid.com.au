@@ -8,12 +8,12 @@ class WeeksController < ApplicationController
 
   def show
     @week = Week.find(params[:id])
-    @invoices = Invoice.not_empty.includes(:team).where(week_id: @week.id).all
+    @invoices = Invoice.not_empty.includes(:team).where(week_id: @week.id).order('teams.created_at DESC').all
   end
 
   def all
     @week = Week.find(params[:id])
-    @invoices = Invoice.includes(:team).where(week_id: @week.id).page params[:page]
+    @invoices = Invoice.includes(:team).where(week_id: @week.id).order('teams.created_at DESC').page params[:page]
   end
 
   def aba_gst
