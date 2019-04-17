@@ -228,7 +228,7 @@
     </div>
     <div class="divider"></div>
     <div class="content">
-      <h1>Recipient created Invoice</h1>
+      <h1>Recipient created Tax Invoice</h1>
       <div class="content--details clearfix">
         <div class="content--address">
           <div class="content--address-content">
@@ -327,10 +327,17 @@
       </table>
     </div>
     <div class="notes">
-      <p>If you are GST registered please let us know so that we can provide you with an RCTI - Recipient Created Tax Invoice for your BAS.</p>
-      <h3>Written Agreement</h3>
-      <p>The recipient and the supplier/provider declare that this agreement relates to the above services. The supplier/provider will not issue tax invoices in respect of these services. The supplier/provider acknowledges that it is not registered for GST and that it will notify the recipient if they do become registered. The recipient acknowledges that it is registered for GST and that it will notify the supplier/provider if it ceases to be registered. Acceptance of this recipient created invoice (RCI) constitutes acceptance of the terms of this written agreement. Both parties to this supply agree that they are parties to an (RCI) agreement. The supplier/provider must notify the recipient within 21 days of receiving this document if the supplier/provider does not wish to accept the proposed agreement.</p>
-      <h4>This form is used for record-keeping purposes only and will not calculate totals for you</h4>
+      <% if !@invoice.team.is_gst %>
+        <p>If you are GST registered please let us know so that we can provide you with an RCTI - Recipient Created Tax Invoice for your BAS.</p>
+        <h3>Written Agreement</h3>
+        <p>The recipient and the supplier/provider declare that this agreement relates to the above services. The supplier/provider will not issue tax invoices in respect of these services. The supplier/provider acknowledges that it is not registered for GST and that it will notify the recipient if they do become registered. The recipient acknowledges that it is registered for GST and that it will notify the supplier/provider if it ceases to be registered. Acceptance of this recipient created invoice (RCI) constitutes acceptance of the terms of this written agreement. Both parties to this supply agree that they are parties to an (RCI) agreement. The supplier/provider must notify the recipient within 21 days of receiving this document if the supplier/provider does not wish to accept the proposed agreement.</p>
+        <h4>This form is used for record-keeping purposes only and will not calculate totals for you</h4>
+      <% else %>
+        <p>The GST shown will form part of the total GST payable by the supplier/provider on the business activity statement (BAS) for the relevant tax period.</p>
+        <h3>Written Agreement</h3>
+        <p>The recipient and the supplier/provider declare that this agreement relates to the above supplies. The recipient can issue tax invoices in respect of these supplies. The supplier/provider will not issue tax invoices in respect of these supplies. The supplier/provider acknowledges that it is registered for GST and that it will notify the recipient if it ceases to be registered. The recipient acknowledges that it is registered for GST and that it will notify the supplier/provider if it ceases to be registered. Acceptance of this recipient created tax invoice (RCTI) constitutes acceptance of the terms of this written agreement. Both parties to this supply agree that they are parties to an RCTI agreement. The supplier/provider must notify the recipient within 21 days of receiving this document if the supplier/provider does not wish to accept the proposed agreement.</p>
+        <h4>This form is used for record-keeping purposes only and will not calculate totals for you</h4>
+      <% end %>
     </div>
   </body>
 </html>
