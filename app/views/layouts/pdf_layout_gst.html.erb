@@ -22,7 +22,11 @@
     </div>
     <div class="divider"></div>
     <div class="content">
-      <h1>Recipient created Tax Invoice</h1>
+      <% if !invoice.team.is_gst %>
+        <h1>Recipient created Invoice</h1>
+      <% else %>
+        <h1>Recipient created Tax Invoice</h1>
+      <% end %>
       <div class="content--details clearfix">
         <div class="content--address">
           <div class="content--address-content">
