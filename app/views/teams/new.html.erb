@@ -67,6 +67,12 @@
       <label for="team_is_gst">Is GST Team</label>
     </div>
   </div>
+  <div class="field">
+    <div class="ui checkbox">
+      <%= form.check_box :unsubscribed %>
+      <label for="team_unsubscribed">Unsubscribed from email delivery</label>
+    </div>
+  </div>
 
   <button class="ui button" type="submit">Create</button>
 <% end %>

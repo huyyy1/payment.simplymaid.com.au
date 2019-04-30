@@ -14,7 +14,7 @@ class Invoice < ApplicationRecord
     )
     pdf = WickedPdf.new.pdf_from_string(
       string,
-      dpi: "300"
+      dpi: "1200"
     )
     pdf
   end
@@ -28,7 +28,7 @@ class Invoice < ApplicationRecord
     )
     pdf = WickedPdf.new.pdf_from_string(
       string,
-      dpi: "300"
+      dpi: "1200"
     )
     pdf
   end
@@ -42,7 +42,7 @@ class Invoice < ApplicationRecord
     )
     pdf = WickedPdf.new.pdf_from_string(
       string,
-      dpi: "300"
+      dpi: "1200"
     )
     pdf
   end

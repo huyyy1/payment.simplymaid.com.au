@@ -58,7 +58,8 @@ class TeamsController < ApplicationController
       :address,
       :bsb,
       :account_number,
-      :notes
+      :notes,
+      :unsubscribed
     )
   end
 

@@ -60,6 +60,16 @@
       <td>Last updated at</td>
       <td><%= @team.updated_at.strftime("%d/%m/%Y %H:%M") %></td>
     </tr>
+    <tr>
+      <td>Invoices delivery</td>
+      <td>
+        <% if @team.unsubscribed %>
+          <span class="warning" style="color: #cf0000">Unsubscribed from email delivery</span>
+        <% else %>
+          Email
+        <% end %>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -89,8 +99,10 @@
                   <%= number_to_currency(invoice.due) %>
                 </span>
               <% end %>
-              <%= link_to invoice_due_mail_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
-                Email
+              <% if !@team.unsubscribed %>
+                <%= link_to invoice_due_mail_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
+                  Email
+                <% end %>
               <% end %>
             </div>
           <% else %>
@@ -109,8 +121,10 @@
                   <%= number_to_currency(invoice.paid) %>
                 </span>
               <% end %>
-              <%= link_to invoice_paid_mail_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
-                Email
+              <% if !@team.unsubscribed %>
+                <%= link_to invoice_paid_mail_invoice_path(invoice, format: :pdf), class: "ui positive basic button  btn2" do %>
+                  Email
+                <% end %>
               <% end %>
             </div>
           <% else %>

@@ -5,7 +5,7 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.includes([:week, :team]).find(params[:id])
     respond_to do |format|
       format.pdf do
-        render pdf: "#Receipt - {@invoice.team.name} {@invoice.week.payment_date('%Y.%m.%d')}", dpi: "300"
+        render pdf: "#Receipt - {@invoice.team.name} {@invoice.week.payment_date('%Y.%m.%d')}", dpi: "1200"
       end
     end
   end
@@ -17,7 +17,7 @@ class InvoicesController < ApplicationController
     end
     respond_to do |format|
       format.pdf do
-        render pdf: "#Receipt - {@invoice.team.name} {@invoice.week.payment_date('%Y.%m.%d')}", dpi: "300"
+        render pdf: "#Receipt - {@invoice.team.name} {@invoice.week.payment_date('%Y.%m.%d')}", dpi: "1200"
       end
     end
   end
@@ -29,7 +29,7 @@ class InvoicesController < ApplicationController
     end
     respond_to do |format|
       format.pdf do
-        render pdf: "#Receipt - {@invoice.team.name} {@invoice.week.payment_date('%Y.%m.%d')}", dpi: "300"
+        render pdf: "#Receipt - {@invoice.team.name} {@invoice.week.payment_date('%Y.%m.%d')}", dpi: "1200"
       end
     end
   end

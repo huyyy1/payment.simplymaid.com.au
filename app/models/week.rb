@@ -259,11 +259,13 @@ class Week < ApplicationRecord
                 if week.total_paid == 0
                   invoices.each do |invoice|
                     if !invoice.due_receipt_sent
-                      InvoiceMailer.with(invoice: invoice).invoice_email.deliver_later
-                      invoice.update_columns(
-                        due_receipt_sent: true,
-                        due_receipt_sent_at: Time.now
-                      )   
+                      if !invoice.team.unsubscribed
+                        InvoiceMailer.with(invoice: invoice).invoice_email.deliver_later
+                        invoice.update_columns(
+                          due_receipt_sent: true,
+                          due_receipt_sent_at: Time.now
+                        )
+                      end
                     end
                   end
                 end
