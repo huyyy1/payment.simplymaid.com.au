@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
 
   devise_for :users
-  resources :teams
+  resources :teams do
+    member do
+      get 'export'
+    end
+  end
   resources :weeks do
     member do
       post 'parse'

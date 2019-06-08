@@ -13,7 +13,14 @@
 
   <body>
     <div class="x-frame">
-    <%= yield %>
+      <%= yield %>
+      <div class="ui container" style="padding: 33px 0">
+        <% flash.each do |key, value| %>
+          <div class="<%= flash_class(key) %>" style="margin: 20px 0">
+            <%= value %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </body>
 </html>

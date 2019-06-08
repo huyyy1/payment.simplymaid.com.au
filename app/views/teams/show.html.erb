@@ -1,6 +1,10 @@
-<h1 class="ui header">
+<h1 class="ui header" style="position: relative">
   <%= @team.name %>
   <div class="sub header"><%= link_to "Edit team", edit_team_path(@team.id) %></div>
+
+  <div class="export-block">
+    <%= link_to "Export to XLS", export_team_path(@team.id), class: "ui secondary basic button" %>
+  </div>
 </h1>
 <br>
 
@@ -110,7 +114,7 @@
               <%= number_to_currency(invoice.due) %>
             <% end %>
           <% end %>
-          
+
         </td>
         <td class="center aligned<% if invoice.paid > 0 %> positive<% end %><% if invoice.paid < 0 %> negative<% end %>">
           <% if invoice.paid > 0 && invoice.team.is_validated? %>
