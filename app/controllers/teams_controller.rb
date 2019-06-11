@@ -25,6 +25,80 @@ class TeamsController < ApplicationController
     end
   end
 
+  def allexport
+    filename = "all-teams-#{Time.now.to_i}.xlsx"
+    workbook = WriteXLSX.new("#{Rails.root}/tmp/#{filename}")
+
+    @teams = Team.includes([:tags, :invoices]).order('name ASC').all
+
+    worksheet = workbook.add_worksheet('Teams Data')
+    bold = workbook.add_format
+    bold.set_bold
+    bold.set_shrink()
+
+    normal = workbook.add_format
+    normal.set_shrink()
+
+    row = 0
+
+    worksheet.write(row, 0, "Name", bold)
+    worksheet.write(row, 1, "First Name", bold)
+    worksheet.write(row, 2, "Last Name", bold)
+    worksheet.write(row, 3, "Email", bold)
+    worksheet.write(row, 4, "Is GST", bold)
+    worksheet.write(row, 5, "ABN", bold)
+    worksheet.write(row, 6, "Billing Name", bold)
+    worksheet.write(row, 7, "Address", bold)
+    worksheet.write(row, 8, "BSB", bold)
+    worksheet.write(row, 9, "Account Number", bold)
+    worksheet.write(row, 10, "Created At", bold)
+    worksheet.write(row, 11, "Updated At", bold)
+    worksheet.write(row, 12, "# Invoices", bold)
+    worksheet.write(row, 13, "Total Due", bold)
+    worksheet.write(row, 14, "Total Paid", bold)
+
+    row = 1
+    @teams.each do |team|
+      total_due = 0.0
+      total_paid = 0.0
+
+      team.invoices.each do |invoice|
+        total_due = total_due + invoice.due
+        total_paid = total_paid + invoice.paid
+      end
+
+      if team.is_gst
+        gst = "GST"
+      else
+        gst = "Non GST"
+      end
+
+      worksheet.write(row, 0, team.name, normal)
+      worksheet.write(row, 1, "#{team.first_name}", normal)
+      worksheet.write(row, 2, "#{team.last_name}", normal)
+      worksheet.write(row, 3, team.email, normal)
+      worksheet.write(row, 4, gst, normal)
+      worksheet.write(row, 5, team.abn, normal)
+      worksheet.write(row, 6, team.billing_name, normal)
+      worksheet.write(row, 7, team.address, normal)
+      worksheet.write(row, 8, team.bsb, normal)
+      worksheet.write(row, 9, team.account_number, normal)
+      worksheet.write(row, 10, team.created_at.strftime("%d/%m/%Y %H:%M"), normal)
+      worksheet.write(row, 11, team.updated_at.strftime("%d/%m/%Y %H:%M"), normal)
+      worksheet.write(row, 12, team.invoices.count, normal)
+      worksheet.write(row, 13, total_due, normal)
+      worksheet.write(row, 14, total_paid, normal)
+
+      row = row + 1
+    end
+
+    workbook.close
+
+    send_file("#{Rails.root}/tmp/#{filename}",
+      :filename => filename,
+      :type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+  end
+
   def export
     @team = Team.includes(:tags).find(params[:id])
     filename = "#{@team.name}-#{Time.now.to_i}.xlsx"

@@ -1,6 +1,10 @@
-<h1 class="ui header">
+<h1 class="ui header" style="position: relative">
   Teams
   <div class="sub header">Available teams</div>
+
+  <div class="export-block">
+    <%= link_to "Export to XLS", export_teams_path, class: "ui secondary basic button" %>
+  </div>
 </h1>
 
 <div class="ui divider"></div>
@@ -25,7 +29,7 @@
                 <span class="ui mini label yellow">Recently updated</span>
               <% end %>
             <% end %>
-        
+
         </td>
         <td class="center aligned <% if team.status %>positive<% end %>"><% if team.status %>Active<% end %></td>
         <td class="center aligned"><%= link_to "Edit", edit_team_path(team.id), class: "ui green basic button mini" %></td>

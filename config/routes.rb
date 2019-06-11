@@ -5,6 +5,9 @@ Rails.application.routes.draw do
     member do
       get 'export'
     end
+    collection do
+      get 'export' => 'teams#allexport'
+    end
   end
   resources :weeks do
     member do
