@@ -81,13 +81,23 @@ Rails.application.configure do
   #   :enable_starttls_auto => true
   # }
 
+  # config.action_mailer.smtp_settings = {
+  #   :address              => "smtp-relay.gmail.com",
+  #   :port                 => 587,
+  #   :domain               => "roompay.com.au",
+  #   :user_name            => "info@roompay.com.au",
+  #   :password             => "Koukidess55$",
+  #   :authentication       => :plain,
+  #   :enable_starttls_auto => true
+  # }
+
   config.action_mailer.smtp_settings = {
-    :address              => "smtp-relay.gmail.com",
-    :port                 => 587,
-    :domain               => "roompay.com.au",
-    :user_name            => "info@roompay.com.au",
-    :password             => "Koukidess55$",
-    :authentication       => :plain,
+    :user_name => 'alexshk',
+    :password => 'ontheLin3',
+    :domain => 'payment.simplymaid.com.au',
+    :address => 'smtp.sendgrid.net',
+    :port => 587,
+    :authentication => :plain,
     :enable_starttls_auto => true
   }
 
