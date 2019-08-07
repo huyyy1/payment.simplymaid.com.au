@@ -318,4 +318,8 @@ class Week < ApplicationRecord
     # week.process_payments
   end
 
+  def self.mail_test
+    InvoiceMailer.test_mail.deliver_later
+  end
+
 end

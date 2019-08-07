@@ -1,5 +1,9 @@
 class InvoiceMailer < ApplicationMailer
 
+  def test_mail
+    mail(to: 'alex.shkolnikov@gmail.com', subject: "SimplyMaid test")
+  end
+
   def missing_team_details_email
     @week = params[:week]
     @user = params[:user]
