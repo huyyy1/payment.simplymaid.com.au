@@ -92,8 +92,8 @@ Rails.application.configure do
   # }
 
   config.action_mailer.smtp_settings = {
-    :user_name => 'alexshk',
-    :password => 'ontheLin3',
+    :user_name => 'simplymaid',
+    :password => 'BFy&rQn*2Sj5yxj',
     :domain => 'payment.simplymaid.com.au',
     :address => 'smtp.sendgrid.net',
     :port => 587,
