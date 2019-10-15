@@ -5,18 +5,23 @@
   </head>
   <%
 
+  have_insurance = 0
+
   if @invoice.nil?
     @invoice = invoice
   end
 
   if mode == 'due'
+    if @invoice.have_insurance
+      have_insurance = 5.0
+    end
     if @invoice.team.is_gst
-      before = @invoice.due.to_f/1.1
-      gst = @invoice.due - before
+      before = (@invoice.due + have_insurance).to_f/1.1
+      gst = (@invoice.due+have_insurance) - before
       total = @invoice.due
     else
-      before = @invoice.due
-      total = @invoice.due
+      before = @invoice.due+have_insurance
+      total = @invoice.due+have_insurance
     end
   else
     if @invoice.team.is_gst
@@ -102,6 +107,14 @@
           </tr>
         </tbody>
         <tfoot>
+          <% if @invoice.have_insurance && mode == 'due' %>
+            <tr>
+              <th></th>
+              <th></th>
+              <td class="b">Simply Maid Insurance</td>
+              <td>-$5.00</td>
+            </tr>
+          <% end %>
           <% if @invoice.team.is_gst %>
             <tr>
               <th></th>

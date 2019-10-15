@@ -33,7 +33,7 @@
       </td>
     </tr>
     <tr>
-      <td>Insurance</td>
+      <td>SM Insurance</td>
       <td>
         <% if @team.have_insurance_override %>
           Yes (set in settings)
@@ -106,7 +106,7 @@
       <% @total_paid = @total_paid + invoice.paid %>
       <tr>
         <td>
-          <%= link_to invoice.week.start_date.strftime("%d/%m/%Y")+" - "+invoice.week.end_date.strftime("%d/%m/%Y"), invoice_path(invoice.id) %>
+          <%= invoice.week.start_date.strftime("%d/%m/%Y")+" - "+invoice.week.end_date.strftime("%d/%m/%Y") %>
         </td>
         <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>">
           <% if invoice.due > 0 && invoice.team.is_validated? %>
