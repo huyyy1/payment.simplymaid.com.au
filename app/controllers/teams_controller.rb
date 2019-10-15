@@ -244,6 +244,7 @@ class TeamsController < ApplicationController
       :bsb,
       :account_number,
       :notes,
+      :have_insurance_override,
       :unsubscribed
     )
   end

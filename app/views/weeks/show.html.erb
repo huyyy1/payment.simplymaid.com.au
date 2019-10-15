@@ -101,6 +101,7 @@
         <tr>
           <th style="width: 30px;" class="center aligned">#</th>
           <th>Team</th>
+          <th style="width: 40px;" class="center aligned"><b>Insurance</b></th>
           <th style="width: 140px;" class="center aligned"><b>Due</b></th>
           <th style="width: 140px;" class="center aligned"><b>Paid</b></th>
         </tr>
@@ -135,6 +136,9 @@
                 <% end %>
               </td>
             <% end %>
+            <td class="center aligned">
+              <% if invoice.have_insurance %><%= number_to_currency(-5.00) %><% else %><% end %>
+            </td>
             <td class="center aligned<% if invoice.due > 0 %> positive<% end %><% if invoice.due < 0 %> negative<% end %>">
               <% if invoice.due > 0 && invoice.team.is_validated? %>
                 <% if invoice.due_receipt_sent %>
@@ -177,6 +181,7 @@
         <tr>
           <th style="width: 30px;" class="center aligned"></th>
           <th>Total</th>
+          <th></th>
           <th style="width: 80px;" class="center aligned"><b style="font-size: 20px;"><%= number_to_currency(@week.total_due) %></b></th>
           <th style="width: 80px;" class="center aligned"><b style="font-size: 20px;"><%= number_to_currency(@week.total_paid) %></b></th>
         </tr>

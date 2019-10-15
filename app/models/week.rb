@@ -66,6 +66,9 @@ class Week < ApplicationRecord
               team.email = result_json["team"]["email"]
               team.status = result_json["team"]["active"]
             end
+
+            @team.tags.clear
+
             if result_json["team"]["tags_info"].present?
               result_json["team"]["tags_info"].each do |tag_json|
                 @tag = Tag.where(launch_id: tag_json["id"]).first_or_create do |tag|
@@ -78,6 +81,10 @@ class Week < ApplicationRecord
               end
             end
 
+            if Time.now >= Date.new(2019,10,15)
+              @team.check_insurance
+            end
+
             paid = paid + result_json["paid"].to_f
 
             @invoice = Invoice.create(
@@ -86,8 +93,9 @@ class Week < ApplicationRecord
               earned: result_json["earned"],
               tips: result_json["tips"],
               adjustments: result_json["adjustments"],
-              due: result_json["due"],
+              due: @team.have_insurance ? (result_json["due"] - 5.0) : result_json["due"],
               paid: result_json["paid"],
+              have_insurance: @team.have_insurance,
               wages_hourly: result_json["wages"]["hourly"],
               wages_share: result_json["wages"]["share"],
               wages_service_price_only: result_json["wages"]["service_price_only"],

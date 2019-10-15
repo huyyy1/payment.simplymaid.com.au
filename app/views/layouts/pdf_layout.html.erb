@@ -70,8 +70,13 @@
               <%= invoice.week.start_date.strftime("%Y/%m/%d") %> - <%= invoice.week.end_date.strftime("%Y/%m/%d") %>
             </td>
             <td>1</td>
-            <td>$<%= invoice.due %></td>
-            <td>$<%= invoice.due %></td>
+            <% if invoice.have_insurance %>
+              <td>$<%= invoice.due+5.0 %></td>
+              <td>$<%= invoice.due+5.0 %></td>
+            <% else %>
+              <td>$<%= invoice.due %></td>
+              <td>$<%= invoice.due %></td>
+            <% end %>
           </tr>
         </tbody>
         <tfoot>
@@ -79,8 +84,20 @@
             <th></th>
             <th></th>
             <td class="b">Total</td>
-            <td>$<%= invoice.due %></td>
+            <% if invoice.have_insurance %>
+              <td>$<%= invoice.due + 5.0 %></td>
+            <% else %>
+              <td>$<%= invoice.due %></td>
+            <% end %>
           </tr>
+          <% if invoice.have_insurance %>
+            <tr>
+              <th></th>
+              <th></th>
+              <td class="b">Simply Maid Insurance</td>
+              <td>-$5.00</td>
+            </tr>
+          <% end %>
           <tr>
             <th></th>
             <th></th>

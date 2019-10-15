@@ -49,4 +49,20 @@ class Team < ApplicationRecord
     end
   end
 
+  def check_insurance
+    have_insurance = false
+    if self.tags.present?
+      insurance_titles = ['sm-insurance', 'sm insurance']
+      self.tags.each do |tag|
+        if insurance_titles.include?(tag.title.downcase)
+          have_insurance = true
+        end
+      end
+    end
+    if !have_insurance && self.have_insurance_override
+      have_insurance = true
+    end
+    self.update_columns(have_insurance: have_insurance)
+  end
+
 end

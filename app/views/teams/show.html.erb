@@ -11,7 +11,7 @@
 <table class="ui celled striped table">
   <tbody>
     <tr>
-      <td>First Name</td>
+      <td style="width:25%">First Name</td>
       <td><%= @team.first_name %></td>
     </tr>
     <tr>
@@ -29,6 +29,20 @@
           <div class="ui label">
             <i class="tag icon"></i> <%= tag.title %>
           </div>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>Insurance</td>
+      <td>
+        <% if @team.have_insurance_override %>
+          Yes (set in settings)
+        <% else %>
+          <% if @team.have_insurance %>
+            Yes (set in Launch27)
+          <% else %>
+            No
+          <% end %>
         <% end %>
       </td>
     </tr>
