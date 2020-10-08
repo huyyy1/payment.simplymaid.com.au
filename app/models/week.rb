@@ -162,7 +162,7 @@ class Week < ApplicationRecord
               bsb: bsb,
               account_number: invoice.team.account_number,
               amount: (invoice.due*100).to_i, # Amount in cents
-              account_name: invoice.team.name,
+              account_name: invoice.team.name[0..31],
               transaction_code: 53,
               lodgement_reference: "SIMPLY MAID", #gst add here
               name_of_remitter: "SIMPLY MAID"
@@ -202,7 +202,7 @@ class Week < ApplicationRecord
               bsb: bsb,
               account_number: invoice.team.account_number,
               amount: (invoice.due*100).to_i, # Amount in cents
-              account_name: invoice.team.name,
+              account_name: invoice.team.name[0..31],
               transaction_code: 53,
               lodgement_reference: "SIMPLY MAID", #gst add here
               name_of_remitter: "SIMPLY MAID"
@@ -263,7 +263,6 @@ class Week < ApplicationRecord
               result[:message] = 'Not all teams have BSB and Account number details'
             else
               results = week.create_aba
-              p results.inspect
               if results[:success]
                 if week.total_paid == 0
                   invoices.each do |invoice|
