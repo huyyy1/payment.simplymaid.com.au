@@ -263,6 +263,7 @@ class Week < ApplicationRecord
               result[:message] = 'Not all teams have BSB and Account number details'
             else
               results = week.create_aba
+              p results.inspect
               if results[:success]
                 if week.total_paid == 0
                   invoices.each do |invoice|
