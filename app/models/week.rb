@@ -330,4 +330,18 @@ class Week < ApplicationRecord
     InvoiceMailer.test_mail.deliver_later
   end
 
+  def self.weeks_to_the_moon
+    start_date = Date.new(2018,10,4)
+    while start_date < Date.new(2033,10,7) do
+      Week.create(
+        start_date: start_date,
+        end_date: start_date + 6.days,
+        payment_date: start_date + 10.days
+      )
+      start_date = start_date + 7.days
+    end
+
+  end
+  
+
 end
