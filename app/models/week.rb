@@ -331,8 +331,8 @@ class Week < ApplicationRecord
   end
 
   def self.weeks_to_the_moon
-    start_date = Date.new(2018,10,4)
-    while start_date < Date.new(2033,10,7) do
+    start_date = Date.new(2021,10,10)
+    while start_date < Date.new(2033,10,10) do
       Week.create(
         start_date: start_date,
         end_date: start_date + 6.days,
